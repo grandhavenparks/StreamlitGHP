@@ -46,6 +46,8 @@ oak-wilt-streamlit/
 └─ models/
 └─ swinv2_tiny_oakwilt25.pth  # (Optional: if you prefer to keep the model inside repo folder)
 
+```
+
 > If you keep the model in `models/`, update `MODEL_PATH` in `app2.py`.
 
 ---
