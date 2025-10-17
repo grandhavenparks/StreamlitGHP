@@ -1,132 +1,197 @@
-# Oak-Wilt Detector & Geo-Mapper
+```markdown
+# Oak-Wilt Detector & Geo-Mapper (Streamlit)
 
-A Streamlit application for detecting oak wilt disease in tree images using a pretrained Swin Transformer model, extracting GPS metadata, and visualizing high-confidence detections on an interactive map.
+Fast, lightweight Streamlit app to detect **Oak Wilt (OW)** in images using a fine-tuned **SwinV2-Tiny** model. The app supports **single/multi image uploads** and **local folder scanning**, extracts **GPS EXIF** when available, and renders detections on an interactive **Folium** map.
 
-## 🚀 Features
+> **Label mapping is fixed and explicit:**  
+> `NOW = 0` (index 0) → “There’s No Oak Wilt in this Image”  
+> `OW  = 1` (index 1) → “There’s Oak Wilt in this Image”
 
-- **Image Classification**  
-  Uses a fine-tuned `swinv2_tiny_window8_256` model to classify uploaded JPG/PNG images as “Oak Wilt” vs. “No Oak Wilt” with a configurable confidence threshold.
+---
 
-- **EXIF GPS Extraction**  
-  Parses EXIF metadata to extract latitude/longitude from images taken with GPS-enabled cameras.
+## ✨ Features
 
-- **Interactive Map**  
-  Plots high-confidence “Oak Wilt” detections on a Folium map with clustering support.
+- **Two modes**: Upload images (multi-file) or scan a local folder.
+- **Deterministic label mapping** (NOW=0, OW=1) baked into the UI and logic.
+- **Confidence threshold slider** (default 0.75) controls what gets mapped.
+- **GPS EXIF extraction** (if present) to pin detections on a **Folium** map.
+- **Fast & responsive**: Model + data caching; GPU used if available.
 
-- **Pagination & Filtering**  
-  Browse large image sets page by page; filter results by predicted class.
+---
 
-- **Two App Variants**  
-  - **`app.py`**: Single-session file uploader.  
-  - **`app2.py`**: Directory-based batch processing UI.
+## 🧠 Model & Data
 
-## 📁 File Structure
+- **Trained model** (PyTorch `state_dict`):
+  - `D:\DNR\Streamlit App\swinv2_tiny_oakwilt25.pth` (local in your environment)
+  - Cloud copy: **Google Drive**  
+    https://drive.google.com/drive/folders/1Ga4BZxb08oR-Fg8uTnfxtpx3SUNauCMq?usp=drive_link
 
-.
-├── app.py # Streamlit app: upload & classify individual images
-├── app2.py # Streamlit app: process a local directory of images
-├── red.png # Marker icon for Folium map
-├── requirements.txt # Python dependencies
-└── README.md # This file
+- **Sample images** (optional):  
+  https://drive.google.com/drive/folders/11WMiFoaSgoMpJaXgrz7N1qRDuYiQ53t8?usp=sharing
 
-markdown
-Copy
-Edit
+- **Backbone**: `swinv2_tiny_window8_256` (from `timm`)  
+- **Num classes**: 2 (`NOW`, `OW`)
 
-## 🔧 Prerequisites
+---
 
-- Python 3.8+  
-- GPU recommended (CUDA) but not required  
-- Git LFS (optional, for large model files)
+## 📦 Repository Structure (suggested)
 
-## ⚙️ Installation
+```
 
-1. **Clone the repository**  
-   ```bash
-   git clone https://github.com/your-username/oak-wilt-detector.git
-   cd oak-wilt-detector
-Create & activate virtual environment
+oak-wilt-streamlit/
+├─ app2.py                      # Streamlit app (your provided code)
+├─ requirements.txt
+├─ README.md
+├─ assets/
+│   └─ red.png                  # Optional custom map marker (placed next to app2.py is also fine)
+└─ models/
+└─ swinv2_tiny_oakwilt25.pth  # (Optional: if you prefer to keep the model inside repo folder)
 
-bash
-Copy
-Edit
+````
+
+> If you keep the model in `models/`, update `MODEL_PATH` in `app2.py`.
+
+---
+
+## 🔧 Setup
+
+### 1) Create & activate a virtual environment (Windows PowerShell)
+```ps
 python -m venv venv
-source venv/bin/activate    # Linux/macOS
-venv\Scripts\activate       # Windows
-Install dependencies
+.\venv\Scripts\Activate.ps1
+````
 
-bash
-Copy
-Edit
+### 2) Install dependencies
+
+> Works with **Python 3.11.9**. The `requirements.txt` installs CPU PyTorch by default.
+
+```ps
 pip install -r requirements.txt
-Download pretrained model
-The SwinV2 tiny model weights (swinv2_tiny_oakwilt.pth) can be found here:
-https://drive.google.com/drive/folders/1Ga4BZxb08oR-Fg8uTnfxtpx3SUNauCMq?usp=sharing
-Place the .pth file in models/ (or update MODEL_PATH in the apps accordingly).
+```
 
-Ensure red.png is alongside app.py / app2.py
-This icon is used for map markers.
+**GPU (optional):** If you have a CUDA setup, install the matching `torch/torchvision` from the official PyTorch instructions for your CUDA version, then install the rest of the requirements:
 
-▶️ Usage
-1. Run the single‐upload app (app.py)
-bash
-Copy
-Edit
-streamlit run app.py
-Use the file uploader to select one or more images.
+```ps
+# Example (adjust to your CUDA version per pytorch.org)
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements.txt --no-deps
+```
 
-View predictions, confidence scores, and GPS coordinates in a table.
+---
 
-High-confidence positives are plotted on an interactive Folium map.
+## ⬇️ Get the Model & Samples
 
-2. Run the batch‐processing app (app2.py)
-bash
-Copy
-Edit
+1. **Download** `swinv2_tiny_oakwilt25.pth` from Google Drive (link above).
+
+2. Place it where `MODEL_PATH` in `app2.py` points to:
+
+   ```py
+   MODEL_PATH = r"D:\DNR\Streamlit App\swinv2_tiny_oakwilt25.pth"
+   ```
+
+   Or change `MODEL_PATH` to wherever you store it (e.g., `models/swinv2_tiny_oakwilt25.pth`).
+
+3. (Optional) Download **sample images** and use them to test the app.
+
+---
+
+## 🚀 Run
+
+```ps
 streamlit run app2.py
-Enter the path to a local directory containing JPG/PNG images.
+```
 
-The app will scan, classify, and page through results.
+* Open the “**Upload images**” tab to analyze JPG/PNG files directly.
+* Or use the “**Scan a folder**” tab to point to a local directory.
+* Use the **sidebar slider** to adjust the mapping **confidence threshold**.
+* **High-confidence OW** detections with GPS metadata appear on the **Folium** map.
 
-Filter by class, adjust “images per page”, and view map of high-confidence detections.
+---
 
-🔧 Configuration
-Variable	Description	Default
-MODEL_NAME	Timm model architecture name	swinv2_tiny_window8_256
-MODEL_PATH	Path to the .pth weights file	Update to your local/model folder
-IMG_SIZE	Input size for resizing/cropping	256
-THRESHOLD	Confidence threshold for “Oak Wilt” label (0.0–1.0)	0.75
-MARKER_ICON_PATH	File path for the Folium marker icon	red.png
+## 🧩 How It Works
 
-Edit these constants at the top of app.py/app2.py as needed.
+* **Model loading (cached):**
+  `@st.cache_resource` loads the model once per unique file (path, mtime, size) to avoid stale caches.
 
-📦 Dependencies
-streamlit
+* **Preprocess:**
+  Resize → CenterCrop (256) → ToTensor → Normalize (ImageNet stats).
 
-torch
+* **Inference:**
+  Softmax over logits → `probs[1]` is **OW** confidence (index 1 maps to OW by design).
 
-timm
+* **Thresholding & Mapping:**
+  If **OW confidence ≥ threshold**, label as OW; if GPS in EXIF is present, it appears on the map.
 
-Pillow
+* **EXIF GPS Parsing:**
+  Uses `exifread`. Supports typical `GPSLatitude/Longitude (+ Ref)` tags.
 
-exifread
+---
 
-folium
+## 🏷️ Label Mapping (Important)
 
-streamlit-folium
+* **Order is enforced** in `CLASS_NAMES`:
 
-🤝 Contributing
-Fork this repository
+  ```py
+  CLASS_NAMES = [
+      "There's No Oak Wilt in this Image",  # 0 = NOW
+      "There's Oak Wilt in this Image",     # 1 = OW
+  ]
+  ```
+* The app always interprets `probs[1]` as **OW confidence**, ensuring consistency with training.
 
-Create a feature branch (git checkout -b feature/YourFeature)
+---
 
-Commit your changes (git commit -m "Add YourFeature")
+## ⚡ Performance Tips
 
-Push to your branch (git push origin feature/YourFeature)
+* Prefer **GPU** if available (`torch.cuda.is_available()`).
+* Use **larger batch processing** only when scanning folders (current app processes per-image for UI responsiveness).
+* Keep the **threshold** in a reasonable range (0.70–0.85) depending on recall/precision needs.
+* If classes are visually similar:
 
-Open a Pull Request
+  * Use **more diverse training data** and **hard augmentations**.
+  * Consider **class-weighted loss** (during training) or **test-time augmentation** (TTA) for marginal gains.
 
-Please follow PEP 8 and write meaningful commit messages.
+---
 
-📜 License
-This project is released under the MIT License. See LICENSE for details.
+## 🧰 Troubleshooting
+
+* **`ModuleNotFoundError: No module named 'streamlit_folium'`**
+  `pip install streamlit-folium`
+
+* **`PermissionError` when loading model**
+
+  * Ensure the path is correct and the file isn’t locked by another process.
+  * Try opening the terminal **as Administrator**.
+  * In `app2.py`, the model is opened with `"rb"` to reduce odd permission issues.
+
+* **“Directory not found”** in the **Scan a folder** tab
+
+  * Double-check the path exists and you have permissions.
+
+* **Black map / no pins**
+
+  * Ensure images actually contain **GPS EXIF**.
+  * Only **OW** predictions above the threshold are mapped.
+
+---
+
+## 📝 Notes
+
+* `red.png` (custom map marker) is optional. If not present, default markers are used.
+* The app works without internet; Google Drive links are only for downloading the model/samples.
+* The model detects everything right from the sample image folder except one: "IMG_0304.jpg"
+
+---
+
+## 🙏 Acknowledgments
+
+* [PyTorch](https://pytorch.org/)
+* [timm](https://github.com/huggingface/pytorch-image-models)
+* [Streamlit](https://streamlit.io/)
+* [Folium](https://python-visualization.github.io/folium/)
+* [exifread](https://github.com/ianare/exif-py)
+
+````
+
+> **GPU users:** replace the `torch`/`torchvision` lines with the CUDA-specific wheels recommended by PyTorch for your CUDA version, then install the rest with `--no-deps`.
+
