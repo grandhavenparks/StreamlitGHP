@@ -21,12 +21,12 @@ Fast, lightweight Streamlit app to detect **Oak Wilt (OW)** in images using a fi
 ## 🧠 Model & Data
 
 - **Trained model** (PyTorch `state_dict`):
-  - `D:\DNR\Streamlit App\swinv2_tiny_oakwilt25.pth` (local in your environment)
+  - `D:\DNR\Streamlit App\swinv2_tiny_oakwilt25.pth` (saved in my local environment)
   - Cloud copy: **Google Drive**  
-    https://drive.google.com/drive/folders/1Ga4BZxb08oR-Fg8uTnfxtpx3SUNauCMq?usp=drive_link
+    👉 [Download swin_tiny_model.pth](https://drive.google.com/drive/folders/1Ga4BZxb08oR-Fg8uTnfxtpx3SUNauCMq?usp=drive_link)
 
 - **Sample images** (optional):  
-  https://drive.google.com/drive/folders/11WMiFoaSgoMpJaXgrz7N1qRDuYiQ53t8?usp=sharing
+  👉 [Download the sample data](https://drive.google.com/drive/folders/11WMiFoaSgoMpJaXgrz7N1qRDuYiQ53t8?usp=sharing)
 
 - **Backbone**: `swinv2_tiny_window8_256` (from `timm`)  
 - **Num classes**: 2 (`NOW`, `OW`)
