@@ -1,4 +1,3 @@
-```markdown
 # Oak-Wilt Detector & Geo-Mapper (Streamlit)
 
 Fast, lightweight Streamlit app to detect **Oak Wilt (OW)** in images using a fine-tuned **SwinV2-Tiny** model. The app supports **single/multi image uploads** and **local folder scanning**, extracts **GPS EXIF** when available, and renders detections on an interactive **Folium** map.
@@ -46,8 +45,6 @@ oak-wilt-streamlit/
 │   └─ red.png                  # Optional custom map marker (placed next to app2.py is also fine)
 └─ models/
 └─ swinv2_tiny_oakwilt25.pth  # (Optional: if you prefer to keep the model inside repo folder)
-
-````
 
 > If you keep the model in `models/`, update `MODEL_PATH` in `app2.py`.
 
@@ -190,8 +187,6 @@ streamlit run app2.py
 * [Streamlit](https://streamlit.io/)
 * [Folium](https://python-visualization.github.io/folium/)
 * [exifread](https://github.com/ianare/exif-py)
-
-````
 
 > **GPU users:** replace the `torch`/`torchvision` lines with the CUDA-specific wheels recommended by PyTorch for your CUDA version, then install the rest with `--no-deps`.
 
