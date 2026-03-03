@@ -136,7 +136,7 @@ def convert_to_degrees(value):
 def process_image(img_bytes):
     """Process uploaded image bytes through the model."""
     
-    # Option A: Save temporarily (like model.py)
+    # cv2.imread expects an image file path- not bytes. Created a temp file path to resoolve.
     import tempfile
     with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as tmp:
         tmp.write(img_bytes)
