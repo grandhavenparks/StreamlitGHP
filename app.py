@@ -361,32 +361,32 @@ with tab_upload:
                 key="download_geojson_main"
             )
 
-        # Map positive detections with GPS
-        gps_results = [r for r in results if r['gps'] and r['classification'] != "Not an Oak Wilt"]
+        # # Map positive detections with GPS
+        # gps_results = [r for r in results if r['gps'] and r['classification'] != "Not an Oak Wilt"]
         
-        if gps_results:
-            st.subheader("GPS Map of Positive Detections")
+        # if gps_results:
+        #     st.subheader("GPS Map of Positive Detections")
             
-            avg_lat = sum(r['gps'][0] for r in gps_results) / len(gps_results)
-            avg_lon = sum(r['gps'][1] for r in gps_results) / len(gps_results)
+        #     avg_lat = sum(r['gps'][0] for r in gps_results) / len(gps_results)
+        #     avg_lon = sum(r['gps'][1] for r in gps_results) / len(gps_results)
             
-            m = folium.Map(location=[avg_lat, avg_lon], zoom_start=12)
-            cluster = MarkerCluster().add_to(m)
+        #     m = folium.Map(location=[avg_lat, avg_lon], zoom_start=12)
+        #     cluster = MarkerCluster().add_to(m)
             
-            icon = folium.CustomIcon(MARKER_ICON_PATH, icon_size=(30, 30)) if os.path.exists(MARKER_ICON_PATH) else None
+        #     icon = folium.CustomIcon(MARKER_ICON_PATH, icon_size=(30, 30)) if os.path.exists(MARKER_ICON_PATH) else None
             
-            for result in gps_results:
-                lat, lon = result['gps']
-                popup_text = f"{result['filename']}<br>{result['classification']}<br>{result['confidence']:.2f}%"
+        #     for result in gps_results:
+        #         lat, lon = result['gps']
+        #         popup_text = f"{result['filename']}<br>{result['classification']}<br>{result['confidence']:.2f}%"
                 
-                if icon:
-                    folium.Marker([lat, lon], popup=popup_text, icon=icon).add_to(cluster)
-                else:
-                    folium.Marker([lat, lon], popup=popup_text).add_to(cluster)
+        #         if icon:
+        #             folium.Marker([lat, lon], popup=popup_text, icon=icon).add_to(cluster)
+        #         else:
+        #             folium.Marker([lat, lon], popup=popup_text).add_to(cluster)
             
-            st_folium(m, width=900, height=500)
-        else:
-            st.info("No positive detections with GPS data found for mapping.")
+        #     st_folium(m, width=900, height=500)
+        # else:
+        #     st.info("No positive detections with GPS data found for mapping.")
 
 
 # Folder Scan Tab
