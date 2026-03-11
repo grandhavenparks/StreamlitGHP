@@ -25,7 +25,7 @@ CLASSIFICATION_CATEGORIES = {
 
 IMG_SIZE = 256
 RESULTS_DIR = "results"
-MAX_UPLOAD = 125
+MAX_UPLOAD = 75
 
 
 # ===========================
